@@ -12,6 +12,7 @@ public class BallCount {
 	private BigInteger allCount;
 	// 正确的可能
 	private BigInteger rightCount;
+	private BigInteger lastOne;
 
 	// 构造方法, 传入抽取次数
 	public BallCount(int n) {
@@ -44,8 +45,10 @@ public class BallCount {
 			BigInteger sum = getCombSum(m, m);
 			BigInteger multiply = firstComb.multiply(pow).multiply(sum);
 			greenIsMax = greenIsMax.add(multiply);
-			System.out.print("绿: " + (n - m) + ", " + (multiply));
-			System.out.println("\t" + "C" + m + "," + n + "*" + 2 + "^" + y + "*sum " + sum);
+			this.lastOne = firstComb.multiply(pow);
+			// System.out.print("绿: " + (n - m) + ", " + (multiply));
+			// System.out.println("\t" + "C" + m + "," + n + "*" + 2 + "^" + y +
+			// "*sum " + sum);
 		}
 		this.rightCount = greenIsMax;
 		return greenIsMax;
@@ -55,18 +58,25 @@ public class BallCount {
 	private BigInteger getCombSum(int m, int ac) {
 		BigInteger result = new BigInteger("0");
 		int count = 0;
+		StringBuffer sb = new StringBuffer("m=" + m + ", sum(");
 		for (int a = 0; a <= ac; a++) {
 			// 去除不符合的a
 			if (a - 2 * m + this.n <= 0 || a + m - this.n > 0 || 2 * a - m > 0) {
 				continue;
 			}
 			BigInteger findCombination = ColorBallUtils.findCombination(m, a);
+			if (a > 0 && m / a == 2 && m % a == 0) {
+				findCombination = findCombination.divide(new BigInteger("2"));
+			}
 			result = result.add(findCombination);
 			count++;
+			sb.append("C" + a + "," + m + "+");
 		}
 		// if (count == 1 && 2 * m - n >= 0) {
 		// return new BigInteger("1");
 		// }
+		sb.replace(sb.length() - 1, sb.length(), ")");
+		// System.out.println(sb.toString());
 		return result;
 	}
 
@@ -81,7 +91,10 @@ public class BallCount {
 	// 输出正确结果
 	public void printResult() {
 		System.out.print("取样次数: " + n + "\t");
-		System.out.print("比例: " + rightCount + "/" + allCount + "\t");
-		System.out.print("结果: " + new BigDecimal(rightCount).divide(new BigDecimal(allCount)));
+		// System.out.println("比例: " + rightCount + "/" + allCount + "\t");
+		System.out.print("结果: "
+				+ new BigDecimal(rightCount).divide(new BigDecimal(allCount)).setScale(4, BigDecimal.ROUND_HALF_UP));
+		System.out.println();
+		System.out.println();
 	}
 }

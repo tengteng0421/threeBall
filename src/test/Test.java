@@ -6,9 +6,12 @@ import ball.BallCount;
 
 public class Test {
 	public static void main(String[] args) {
-		BallCount b = new BallCount(5);
-		BigInteger calc = b.calc();
-		System.out.println(calc);
-		b.printResult();
+		for (int i = 1; i <= 100; i++) {
+
+			BallCount b = new BallCount(i);
+			BigInteger calc = b.calc();
+			// System.out.println(calc);
+			b.printResult();
+		}
 	}
 }
